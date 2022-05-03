@@ -29,6 +29,12 @@ pub struct ParseError<'a> {
     pub kind: nom::error::ErrorKind,
 }
 
+#[derive(Debug, Clone)]
+pub enum ParseErrorOut<'a>{
+    InnerError(ParseError<'a>),
+    NoSinglePatch(&'a  str)
+}
+
 #[doc(hidden)]
 impl<'a> From<nom::Err<nom::error::Error<Input<'a>>>> for ParseError<'a> {
     fn from(err: nom::Err<nom::error::Error<Input<'a>>>) -> Self {
@@ -66,16 +72,22 @@ fn consume_line(input: Input<'_>) -> IResult<Input<'_>, &str> {
     Ok((input, raw.fragment()))
 }
 
-pub(crate) fn parse_single_patch(s: &str) -> Result<Patch, ParseError<'_>> {
-    let (remaining_input, patch) = patch(Input::new(s))?;
-    // Parser should return an error instead of producing remaining input
-    assert!(
-        remaining_input.fragment().is_empty(),
-        "bug: failed to parse entire input. \
-        Remaining: '{}'",
-        remaining_input.fragment()
-    );
-    Ok(patch)
+pub(crate) fn parse_single_patch(s: &str) -> Result<Patch, ParseErrorOut<'_>> {
+    let patch_res = patch(Input::new(s));
+    match patch_res{
+        Ok((remaining_input, patch)) => {
+            // Parser should return an error instead of producing remaining input
+            if !remaining_input.fragment().is_empty() {
+                Err(ParseErrorOut::NoSinglePatch(remaining_input.fragment()))
+            }
+            else {
+                Ok(patch)
+            }
+        },
+        Err(err) => {
+            Err(ParseErrorOut::InnerError(ParseError::from(err)))
+        }
+    }
 }
 
 pub(crate) fn parse_multiple_patches(s: &str) -> Result<Vec<Patch>, ParseError<'_>> {

@@ -3,7 +3,7 @@ use std::fmt;
 
 use chrono::{DateTime, FixedOffset};
 
-use crate::parser::{parse_multiple_patches, parse_single_patch, ParseError};
+use crate::parser::{parse_multiple_patches, parse_single_patch, ParseError, ParseErrorOut};
 
 /// A complete patch summarizing the differences between two files
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -76,7 +76,7 @@ impl<'a> Patch<'a> {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_single(s: &'a str) -> Result<Self, ParseError<'a>> {
+    pub fn from_single(s: &'a str) -> Result<Self, ParseErrorOut<'a>> {
         parse_single_patch(s)
     }
 

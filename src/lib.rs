@@ -50,3 +50,4 @@ mod parser;
 
 pub use ast::*;
 pub use parser::ParseError;
+pub use parser::ParseErrorOut;
