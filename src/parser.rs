@@ -10,6 +10,8 @@ use nom::{
     combinator::{map, not, opt},
     multi::{many0, many1},
     sequence::{delimited, preceded, terminated, tuple},
+    Err::Error as NomError,
+    Err::Failure,
 };
 
 use crate::ast::*;
@@ -104,9 +106,18 @@ fn multiple_patches(input: Input<'_>) -> IResult<Input<'_>, Vec<Patch>> {
 }
 
 fn patch(input: Input<'_>) -> IResult<Input<'_>, Patch> {
+    //    println!("Patch {:?}", input);
     let (input, files) = headers(input)?;
+
     let (input, hunks) = chunks(input)?;
-    let (input, no_newline_indicator) = no_newline_indicator(input)?;
+
+    let mut input_end = input;
+    if input.fragment().starts_with("-- \n") {
+        let (input, _) = tag("-- \n")(input)?;
+        (input_end, _) = consume_line(input)?;
+    }
+
+    let (input, no_newline_indicator) = no_newline_indicator(input_end)?;
     // Ignore trailing empty lines produced by some diff programs
     let (input, _) = many0(newline)(input)?;
 
@@ -125,13 +136,34 @@ fn patch(input: Input<'_>) -> IResult<Input<'_>, Patch> {
 // Header lines
 fn headers(input: Input<'_>) -> IResult<Input<'_>, (File, File)> {
     // Ignore any preamble lines in produced diffs
-    let (input, _) = take_until("---")(input)?;
-    let (input, _) = tag("--- ")(input)?;
+    let mut input1 = input;
+    let input = loop {
+        let sanitize: Result<(Input<'_>, Input<'_>), nom::Err<nom::error::Error<Input<'_>>>> =
+            take_until("----")(input1);
+        //      println!("{:?}", sanitize);
+        if let Err(NomError(error)) = sanitize {
+            break error.input;
+        }
+        if let Ok((input, _)) = sanitize {
+            (input1, _) = tag("----")(input)?;
+        }
+    };
+    let (input, _) = take_until("--- ")(input)?;
+    // git may have --- alone to separate commit message and modified files.
+    let input_res: Result<(Input<'_>, Input<'_>), nom::Err<nom::error::Error<Input<'_>>>> =
+        tag("--- ")(input);
+    let (input, _) = if let Err(NomError(error)) = input_res {
+        let (input, _) = take_until("---")(error.input)?;
+        tag("--- ")(input)?
+    } else {
+        input_res.unwrap()
+    };
     let (input, oldfile) = header_line_content(input)?;
     let (input, _) = newline(input)?;
     let (input, _) = tag("+++ ")(input)?;
     let (input, newfile) = header_line_content(input)?;
     let (input, _) = newline(input)?;
+
     Ok((input, (oldfile, newfile)))
 }
 
@@ -162,10 +194,62 @@ fn chunks(input: Input<'_>) -> IResult<Input<'_>, Vec<Hunk>> {
 }
 
 fn chunk(input: Input<'_>) -> IResult<Input<'_>, Hunk> {
+    println!("{:?}", input);
     let (input, ranges) = chunk_header(input)?;
-    let (input, lines) = many1(chunk_line)(input)?;
-
     let (old_range, new_range, range_text) = ranges;
+    let mut added_lines = 0;
+    let mut removed_lines = 0;
+    let mut context_lines = 0;
+    let mut input_loop = input;
+    let mut lines = Vec::new();
+    //old_range = context_lines + removed_lines, new_range = context_lines + added_lines
+    let input = loop {
+        println!(
+            "{:?} {} {:?} {}",
+            old_range,
+            context_lines + removed_lines,
+            new_range,
+            context_lines + added_lines
+        );
+        let io = chunk_line(input_loop);
+        //      println!("{:?}", io );
+        match io {
+            Ok((input_m, chnk_line)) => {
+                match chnk_line {
+                    Line::Context(_) => context_lines += 1,
+                    Line::Add(_) => added_lines += 1,
+                    Line::Remove(_) => removed_lines += 1,
+                }
+                lines.push(chnk_line);
+                input_loop = input_m;
+                if context_lines + added_lines == new_range.count
+                    && context_lines + removed_lines == old_range.count
+                {
+                    break input_loop;
+                }
+            }
+            Err(NomError(err) | Failure(err)) => {
+                //Patch may have the wrong count for new range, and may consider terminal newlines for old
+                if err.input.fragment() == &""
+                    || err.input.fragment().starts_with("\n")
+                    || context_lines + removed_lines == old_range.count
+                {
+                    break input_loop;
+                } else {
+                    Err(NomError(err))?
+                }
+            }
+            Err(err) => {
+                if context_lines + removed_lines == old_range.count {
+                    //Patch may have the wrong count for new range, and may consider terminal newlines for old
+                    break input_loop;
+                } else {
+                    Err(err)?
+                }
+            }
+        }
+    };
+    //  let (input, lines) = many1(chunk_line)(input)?;
     Ok((
         input,
         Hunk {
@@ -218,7 +302,8 @@ fn u64_digit(input: Input<'_>) -> IResult<Input<'_>, u64> {
 //  double a;
 // --- a;
 // +++ a;
-// +printf("%d\n", a);
+// +printf("%d\n", a);12 |     Err::Error as OtherError,
+
 //  }
 //
 // We will fail to parse this entire diff.

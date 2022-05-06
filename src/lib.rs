@@ -42,7 +42,6 @@
 //!
 //! [Unified Format]: https://www.gnu.org/software/diffutils/manual/html_node/Unified-Format.html
 //! [spec]: http://www.artima.com/weblogs/viewpost.jsp?thread=164293
-
 #![deny(unused_must_use)]
 
 mod ast;
