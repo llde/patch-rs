@@ -30,9 +30,9 @@ pub struct ParseError<'a> {
 }
 
 #[derive(Debug, Clone)]
-pub enum ParseErrorOut<'a>{
+pub enum ParseErrorOut<'a> {
     InnerError(ParseError<'a>),
-    NoSinglePatch(&'a  str)
+    NoSinglePatch(&'a str),
 }
 
 #[doc(hidden)]
@@ -74,19 +74,16 @@ fn consume_line(input: Input<'_>) -> IResult<Input<'_>, &str> {
 
 pub(crate) fn parse_single_patch(s: &str) -> Result<Patch, ParseErrorOut<'_>> {
     let patch_res = patch(Input::new(s));
-    match patch_res{
+    match patch_res {
         Ok((remaining_input, patch)) => {
             // Parser should return an error instead of producing remaining input
             if !remaining_input.fragment().is_empty() {
                 Err(ParseErrorOut::NoSinglePatch(remaining_input.fragment()))
-            }
-            else {
+            } else {
                 Ok(patch)
             }
-        },
-        Err(err) => {
-            Err(ParseErrorOut::InnerError(ParseError::from(err)))
         }
+        Err(err) => Err(ParseErrorOut::InnerError(ParseError::from(err))),
     }
 }
 
@@ -168,8 +165,8 @@ fn chunk(input: Input<'_>) -> IResult<Input<'_>, Hunk> {
     let (input, ranges) = chunk_header(input)?;
     let (input, lines) = many1(chunk_line)(input)?;
 
-     let (old_range, new_range, range_text) = ranges;
-     Ok((
+    let (old_range, new_range, range_text) = ranges;
+    Ok((
         input,
         Hunk {
             old_range,

@@ -7,7 +7,10 @@ use patch::Patch;
 
 #[test]
 fn parse_samples() {
-    let samples_path = PathBuf::from(file!()).parent().unwrap().join("samples_auto");
+    let samples_path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples_auto");
     for file in fs::read_dir(samples_path).unwrap() {
         let path = file.unwrap().path();
         if path.extension().unwrap_or_default() != "diff" {
@@ -34,7 +37,10 @@ fn parse_samples() {
 
 #[test]
 fn parse_sample_bzr() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/bzr.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/bzr.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -51,12 +57,14 @@ fn parse_sample_bzr() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_git() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/git.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/git.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -73,12 +81,14 @@ fn parse_sample_git() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_hg() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/hg.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/hg.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -95,12 +105,14 @@ fn parse_sample_hg() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample0() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample0.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample0.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -117,12 +129,14 @@ fn parse_sample_sample0() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample1() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample1.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample1.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -139,12 +153,14 @@ fn parse_sample_sample1() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample2() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample2.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample2.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -161,12 +177,14 @@ fn parse_sample_sample2() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample3() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample3.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample3.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -183,12 +201,14 @@ fn parse_sample_sample3() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample4() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample4.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample4.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -205,12 +225,14 @@ fn parse_sample_sample4() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 
 #[test]
 fn parse_sample_sample5() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample5.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample5.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -227,11 +249,13 @@ fn parse_sample_sample5() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 #[test]
 fn parse_sample_sample6() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample6.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample6.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -248,11 +272,13 @@ fn parse_sample_sample6() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 #[test]
 fn parse_sample_sample7() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/sample7.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample7.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -269,11 +295,13 @@ fn parse_sample_sample7() {
         )
     });
     assert_eq!(patches, patches2);
-
 }
 #[test]
 fn parse_sample_svn() {
-    let path = PathBuf::from(file!()).parent().unwrap().join("samples/svn.diff");
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/svn.diff");
 
     let data = fs::read_to_string(dbg!(&path)).unwrap();
     let patches = Patch::from_multiple(&data)
@@ -290,5 +318,4 @@ fn parse_sample_svn() {
         )
     });
     assert_eq!(patches, patches2);
-
 }

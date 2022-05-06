@@ -224,7 +224,11 @@ pub struct Hunk<'a> {
 
 impl<'a> fmt::Display for Hunk<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "@@ -{} +{} @@{}", self.old_range, self.new_range, self.range_text)?;
+        write!(
+            f,
+            "@@ -{} +{} @@{}",
+            self.old_range, self.new_range, self.range_text
+        )?;
 
         for line in &self.lines {
             write!(f, "\n{}", line)?;
