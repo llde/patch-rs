@@ -10,7 +10,7 @@
 //! ## Example
 //!
 //! ```
-//! # fn main() -> Result<(), patch::ParseError<'static>> {
+//! # fn main() -> Result<(), patch::ParseErrorOut<'static>> {
 //! // Make sure you add the `patch` crate to the `[dependencies]` key of your Cargo.toml file.
 //! use patch::Patch;
 //!

@@ -45,7 +45,7 @@ impl<'a> Patch<'a> {
     /// # Example
     ///
     /// ```
-    /// # fn main() -> Result<(), patch::ParseError<'static>> {
+    /// # fn main() -> Result<(), patch::ParseErrorOut<'static>> {
     /// # use patch::Patch;
     /// let sample = "\
     /// --- lao	2002-02-21 23:30:39.942229878 -0800
