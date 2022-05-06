@@ -1,0 +1,27 @@
+From 352b16fc7733716468614bdc1c9f43d9aa9126fa Mon Sep 17 00:00:00 2666
+From: LLDE
+Date: Thu, 20 May 2666 17:36:51 +0300
+Subject: Test
+
+---
+ preghiera | 51 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 46 insertions(+), 5 deletions(-)
+
+diff --git a/pregihera b/bestemmia
+index 81874a5c28f..694a6663ae5 100644
+--- a/preghiera
++++ b/bestemmia
+@@ -271,6 +271,10 @@ struct acclamate
+ Acclamate il
+-Signore
++Porcone
+ Voi tutti della terra
+-E servitelo con gioia
++E scansatelo con gioia
+-Andate a Lui con esultanza
++Scappate da Lui con esultanza
+ Acclamate voi tutti
+-Al signore
++Al porcone
+--
+Cose a caso

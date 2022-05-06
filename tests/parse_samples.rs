@@ -319,3 +319,75 @@ fn parse_sample_svn() {
     });
     assert_eq!(patches, patches2);
 }
+
+#[test]
+fn parse_sample_sample_test_separator() {
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample-commit-separator.diff");
+
+    let data = fs::read_to_string(dbg!(&path)).unwrap();
+    let patches = Patch::from_multiple(&data)
+        .unwrap_or_else(|err| panic!("failed to parse {:?}, error: {}", path, err));
+
+    // Make sure that the patch file we produce parses to the same information as the original
+    // patch file.
+    let patch_file: String = patches.iter().map(|patch| format!("{}\n", patch)).collect();
+    println!("{}", patch_file);
+    let patches2 = Patch::from_multiple(&patch_file).unwrap_or_else(|err| {
+        panic!(
+            "failed to re-parse {:?} after formatting, error: {}",
+            path, err
+        )
+    });
+    assert_eq!(patches, patches2);
+}
+
+#[test]
+fn parse_sample_sample_test_separator_endline() {
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample-commit-separator_endline.diff");
+
+    let data = fs::read_to_string(dbg!(&path)).unwrap();
+    let patches = Patch::from_multiple(&data)
+        .unwrap_or_else(|err| panic!("failed to parse {:?}, error: {}", path, err));
+
+    // Make sure that the patch file we produce parses to the same information as the original
+    // patch file.
+    let patch_file: String = patches.iter().map(|patch| format!("{}\n", patch)).collect();
+    println!("{}", patch_file);
+    let patches2 = Patch::from_multiple(&patch_file).unwrap_or_else(|err| {
+        panic!(
+            "failed to re-parse {:?} after formatting, error: {}",
+            path, err
+        )
+    });
+    assert_eq!(patches, patches2);
+}
+
+#[test]
+fn parse_sample_sample_test_separator_comment() {
+    let path = PathBuf::from(file!())
+        .parent()
+        .unwrap()
+        .join("samples/sample-commit-separator_comment.diff");
+
+    let data = fs::read_to_string(dbg!(&path)).unwrap();
+    let patches = Patch::from_multiple(&data)
+        .unwrap_or_else(|err| panic!("failed to parse {:?}, error: {}", path, err));
+
+    // Make sure that the patch file we produce parses to the same information as the original
+    // patch file.
+    let patch_file: String = patches.iter().map(|patch| format!("{}\n", patch)).collect();
+    println!("{}", patch_file);
+    let patches2 = Patch::from_multiple(&patch_file).unwrap_or_else(|err| {
+        panic!(
+            "failed to re-parse {:?} after formatting, error: {}",
+            path, err
+        )
+    });
+    assert_eq!(patches, patches2);
+}
