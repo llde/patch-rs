@@ -1,0 +1,14 @@
+diff --git a/src/d3d11/d3d11_texture.cpp b/src/d3d11/d3d11_texture.cpp
+index 06a7b4a..9dc652b 100644
+--- a/src/d3d11/d3d11_texture.cpp
++++ b/src/d3d11/d3d11_texture.cpp
+@@ -140,6 +140,9 @@ namespace dxvk {
+     if (imageInfo.tiling == VK_IMAGE_TILING_OPTIMAL)
+       imageInfo.layout = OptimizeLayout(imageInfo.usage);
+     
++    if (imageInfo.format == VK_FORMAT_UNDEFINED)
++      Logger::err(str::format("Unknown format: ", pDesc->Format));
++    
+     // Check if we can actually create the image
+     if (!CheckImageSupport(&imageInfo, imageInfo.tiling)) {
+       throw DxvkError(str::format(
