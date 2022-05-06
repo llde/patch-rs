@@ -194,7 +194,7 @@ fn chunks(input: Input<'_>) -> IResult<Input<'_>, Vec<Hunk>> {
 }
 
 fn chunk(input: Input<'_>) -> IResult<Input<'_>, Hunk> {
-    println!("{:?}", input);
+  //  println!("{:?}", input);
     let (input, ranges) = chunk_header(input)?;
     let (old_range, new_range, range_text) = ranges;
     let mut added_lines = 0;
@@ -204,13 +204,6 @@ fn chunk(input: Input<'_>) -> IResult<Input<'_>, Hunk> {
     let mut lines = Vec::new();
     //old_range = context_lines + removed_lines, new_range = context_lines + added_lines
     let input = loop {
-        println!(
-            "{:?} {} {:?} {}",
-            old_range,
-            context_lines + removed_lines,
-            new_range,
-            context_lines + added_lines
-        );
         let io = chunk_line(input_loop);
         //      println!("{:?}", io );
         match io {
