@@ -11,7 +11,7 @@ diff --git a/pregihera b/bestemmia
 index 81874a5c28f..694a6663ae5 100644
 --- a/preghiera
 +++ b/bestemmia
-@@ -271,6 +271,10 @@ struct acclamate
+@@ -271,7 +271,7 @@ struct acclamate
  Acclamate il
 -Signore
 +Porcone
@@ -23,5 +23,5 @@ index 81874a5c28f..694a6663ae5 100644
  Acclamate voi tutti
 -Al signore
 +Al porcone
---
+-- 
 Cose a caso
